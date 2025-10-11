@@ -1,4 +1,4 @@
-import GameState from "@/app/BoardGameControllers/GameState/GameStateInterface";
+import GameState from "@/app/GameControllers/GameState/GameStateInterface";
 
 export default class TicTacToeState extends GameState
 {
