@@ -1,27 +1,30 @@
+import GameController from '@/app/GameControllers/GameControllerInterface';
 import Square from '../square/component';
 import './styles.css'
 
 export default function Board({
   xIsNext,
-  squares,
+  gameController,
   onPlay
 }: {
   xIsNext: boolean,
-  squares: string[],
+  gameController: GameController,
   onPlay: (square: string[]) => void
 })
 {
-  const winner = calculateWinner(squares);
-  const status = winner ? "Winner: " + winner : "Next player: " + (xIsNext ? "X" : "O");
+  const squares = gameController.getCurrentBoardState();
+  const hasWinner = gameController.hasWinner();
+  const status = hasWinner ? "Winner: " + gameController.getWinnerName() : "Next player: " + (xIsNext ? "X" : "O");
 
   const onClickHandler = (index: number) => {
-    if (squares[index] || calculateWinner(squares))
+    if (squares[index] || hasWinner)
     {
       return;
     }
 
     const newSquares = squares.slice();
     newSquares[index] = xIsNext ? "X" : "O";
+    gameController.addPlay(newSquares);
     onPlay(newSquares)
   };
 

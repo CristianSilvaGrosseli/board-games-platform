@@ -1,12 +1,18 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Board from './board/component';
+import GameController from "@/app/GameControllers/GameControllerInterface";
+import TicTacToeController from "@/app/GameControllers/TicTacToeController";
 import './styles.css'
 
 export default function Game()
 {
-  const [history, setHistory] = useState([Array(9).fill(null)]);
+  const gameController = useRef<GameController>(null);
+  if (!gameController.current)
+  {
+    gameController.current = new TicTacToeController();
+  }
+  const [history, setHistory] = useState([gameController.current.getCurrentBoardState()]);
   const [currentMove, setCurrentMove] = useState(0);
-  const currentSquares = history[currentMove];
   const xIsNext = currentMove % 2 === 0;
 
   const handlePlay = (nextSquares: string[]) => {
@@ -16,6 +22,7 @@ export default function Game()
   };
 
   const jumpTo = (nextMove: number) => {
+    gameController.current?.setCurrentGameState(nextMove);
     setCurrentMove(nextMove);
   };
 
@@ -40,7 +47,7 @@ export default function Game()
     <>
       <div className="game">
         <div className="game-board">
-          <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay}/>
+          <Board xIsNext={xIsNext} gameController={gameController.current} onPlay={handlePlay} />
         </div>
       </div>
       <div className="game-info">
