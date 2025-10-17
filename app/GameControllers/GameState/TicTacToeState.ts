@@ -43,7 +43,7 @@ export default class TicTacToeState extends GameState
 
   public isTerminal()
   {
-    const hasWinner = this.getWinnerPlayerId() !== null;
+    const hasWinner = this.getWinnerPlayerId().length > 0;
     return hasWinner || !this.hasCandidateToLegalPlay();
   }
 
