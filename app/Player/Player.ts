@@ -1,4 +1,4 @@
-import generateUUID from "../utils/UUIDGenerator";
+import generateUUID from "@/app/utils/UUIDGenerator";
 
 export default class Player
 {

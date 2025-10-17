@@ -11,7 +11,7 @@ export default abstract class GameState
         }
         this.mBoardState = boardState.slice();
         this.mPlayerId = playerId;
-        console.log(`game state playerid: ${this.mPlayerId}`);
+        //console.log(`game state playerid: ${this.mPlayerId}`);
     }
 
     getPlayerId(): string
