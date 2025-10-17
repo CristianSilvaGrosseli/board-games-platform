@@ -17,7 +17,7 @@ export default function Board({
   const status = hasWinner ? "Winner: " + gameController.getWinnerName() : "Next player: " + (xIsNext ? "X" : "O");
 
   const onClickHandler = (index: number) => {
-    if (squares[index] || hasWinner)
+    if (!xIsNext || squares[index] || hasWinner)
     {
       return;
     }

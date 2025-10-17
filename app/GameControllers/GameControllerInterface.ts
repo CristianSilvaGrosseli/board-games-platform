@@ -17,6 +17,11 @@ export default abstract class GameController
     return this.mStatesHistory[this.mStatesHistory.length - 1];
   }
 
+  public getCurrentTurnPlayer(): string
+  {
+    return this.getCurrentGameState().getPlayerId();
+  }
+
   public addPlay(boardState: string[]): void
   {
     throw "must implement overload method";

@@ -1,7 +1,8 @@
-import { useState, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import Board from './board/component';
 import GameController from "@/app/GameControllers/GameControllerInterface";
 import GameControllerFactory from "@/app/GameControllers/GameControllerFactory";
+import { MCTS } from "@/app/IA/MCTS/MCTS";
 import './styles.css'
 
 export default function Game()
@@ -20,6 +21,19 @@ export default function Game()
     setHistory(nextHistory);
     setCurrentMove(nextHistory.length - 1);
   };
+
+    useEffect(() => {
+    const xIsNext = currentMove % 2 === 0;
+    if (!xIsNext && gameController.current)
+    {
+      const ia = new MCTS(gameController.current);
+      const positionToplay = ia.getBestAction(gameController.current.getCurrentTurnPlayer());
+      const newSquares = gameController.current.getCurrentBoardState().slice();
+      newSquares[positionToplay] = xIsNext ? "X" : "O";
+      gameController.current.addPlay(newSquares);
+      handlePlay(newSquares)
+    }
+  }, [currentMove]);
 
   const jumpTo = (nextMove: number) => {
     gameController.current?.setCurrentGameState(nextMove);
