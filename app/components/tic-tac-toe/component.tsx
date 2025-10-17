@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import Board from './board/component';
 import GameController from "@/app/GameControllers/GameControllerInterface";
-import TicTacToeController from "@/app/GameControllers/TicTacToeController";
+import GameControllerFactory from "@/app/GameControllers/GameControllerFactory";
 import './styles.css'
 
 export default function Game()
@@ -9,7 +9,7 @@ export default function Game()
   const gameController = useRef<GameController>(null);
   if (!gameController.current)
   {
-    gameController.current = new TicTacToeController();
+    gameController.current = GameControllerFactory.CreateTicTacToeControllerInstance();
   }
   const [history, setHistory] = useState([gameController.current.getCurrentBoardState()]);
   const [currentMove, setCurrentMove] = useState(0);

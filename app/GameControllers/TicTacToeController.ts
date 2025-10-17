@@ -1,5 +1,5 @@
 import GameController from "@/app/GameControllers/GameControllerInterface";
-import TicTacToeState from "@/app/GameControllers/GameState/TicTacToeState";
+import GameStateFactory from "@/app/GameControllers/GameState/GameStateFactory";
 
 export default class TicTacToeController extends GameController
 {
@@ -12,7 +12,7 @@ export default class TicTacToeController extends GameController
   private setInitialState(): void
   {
     const initialBoard = Array(9).fill(null);
-    const initialState = new TicTacToeState(initialBoard, this.mPlayers[0].getId(), "X", this.mPlayers[1].getId());
+    const initialState = GameStateFactory.CreateTicTacToeStateInstance(initialBoard, this.mPlayers[0].getId(), "X", this.mPlayers[1].getId());
     this.mStatesHistory.push(initialState);
   }
 
@@ -21,7 +21,7 @@ export default class TicTacToeController extends GameController
     const currentTurnPlayerId = this.getCurrentTurnPlayerId();
     const playerSymbol = this.getSymbolFromPlayerId(currentTurnPlayerId);
     const opponentPlayerId = currentTurnPlayerId === this.mPlayers[0].getId() ? this.mPlayers[1].getId() : this.mPlayers[0].getId();
-    const newGameState = new TicTacToeState(boardState.slice(), opponentPlayerId, playerSymbol, currentTurnPlayerId);
+    const newGameState = GameStateFactory.CreateTicTacToeStateInstance(boardState.slice(), opponentPlayerId, playerSymbol, currentTurnPlayerId);
     this.mStatesHistory.push(newGameState);
   }
 
