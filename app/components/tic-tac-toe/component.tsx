@@ -4,6 +4,7 @@ import GameController from "@/app/GameControllers/GameControllerInterface";
 import GameControllerFactory from "@/app/GameControllers/GameControllerFactory";
 import { MCTS } from "@/app/IA/MCTS/MCTS";
 import './styles.css'
+import Minimax from "@/app/IA/Minimax/Minimax";
 
 export default function Game()
 {
@@ -26,7 +27,8 @@ export default function Game()
     const xIsNext = currentMove % 2 === 0;
     if (!xIsNext && gameController.current && !gameController.current.getCurrentGameState().isTerminal())
     {
-      const ia = new MCTS(gameController.current);
+      //const ia = new MCTS(gameController.current);
+      const ia = new Minimax(gameController.current);
       const bestAction = ia.getBestAction();
       gameController.current.addPlayByGameState(bestAction);
       handlePlay(bestAction.getBoardState());
