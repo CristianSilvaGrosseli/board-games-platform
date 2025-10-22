@@ -19,9 +19,9 @@ export default class TicTacToeController extends GameController
   public addPlayByBoardSnapshot(boardSnapshot: string[]): void
   {
     const currentTurnPlayerId = this.getCurrentTurnPlayerId();
-    const playerSymbol = this.getSymbolFromPlayerId(currentTurnPlayerId);
     const opponentPlayerId = currentTurnPlayerId === this.mPlayers[0].getId() ? this.mPlayers[1].getId() : this.mPlayers[0].getId();
-    const newGameState = GameStateFactory.CreateTicTacToeStateInstance(boardState.slice(), opponentPlayerId, playerSymbol, currentTurnPlayerId);
+    const opponentPlayerSymbol = this.getSymbolFromPlayerId(opponentPlayerId);
+    const newGameState = GameStateFactory.CreateTicTacToeStateInstance(boardSnapshot.slice(), opponentPlayerId, opponentPlayerSymbol, currentTurnPlayerId);
     this.mStatesHistory.push(newGameState);
   }
 
