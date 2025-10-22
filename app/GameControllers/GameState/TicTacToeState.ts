@@ -20,8 +20,8 @@ export default class TicTacToeState extends GameState
       //console.log(`GameState: ${this.mBoardState.toString()}: getLegalPlays: isTerminal`);
       return [];
     }
-    
-    const r = this.mBoardState.reduce((ret: GameState[], c, i) => {
+
+    return this.mBoardState.reduce((ret: GameState[], c, i) => {
       if (!c)
       {
         const appliedBoard = this.mBoardState.slice();
@@ -31,8 +31,6 @@ export default class TicTacToeState extends GameState
       }
       return ret;
     }, []);
-    //console.log(`GameState: ${this.mBoardState.toString()}: getLegalPlays: size: ${r.length}`);
-    return r;
   }
 
   public hasCandidateToLegalPlay(): boolean
@@ -41,7 +39,7 @@ export default class TicTacToeState extends GameState
     return this.mBoardState.some(c => !c);
   }
 
-  public isTerminal()
+  public isTerminal(): boolean
   {
     const hasWinner = this.getWinnerPlayerId().length > 0;
     return hasWinner || !this.hasCandidateToLegalPlay();
