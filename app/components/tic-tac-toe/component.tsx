@@ -22,16 +22,14 @@ export default function Game()
     setCurrentMove(nextHistory.length - 1);
   };
 
-    useEffect(() => {
+  useEffect(() => {
     const xIsNext = currentMove % 2 === 0;
-    if (!xIsNext && gameController.current)
+    if (!xIsNext && gameController.current && !gameController.current.getCurrentGameState().isTerminal())
     {
       const ia = new MCTS(gameController.current);
-      const positionToplay = ia.getBestAction(gameController.current.getCurrentTurnPlayer());
-      const newSquares = gameController.current.getCurrentBoardState().slice();
-      newSquares[positionToplay] = xIsNext ? "X" : "O";
-      gameController.current.addPlay(newSquares);
-      handlePlay(newSquares)
+      const bestAction = ia.getBestAction();
+      gameController.current.addPlayByGameState(bestAction);
+      handlePlay(bestAction.getBoardState());
     }
   }, [currentMove]);
 

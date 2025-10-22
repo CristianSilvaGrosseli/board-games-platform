@@ -13,10 +13,7 @@ export class MCTS
   {
     //console.log(`MCTS: constructor`);
     this.mGame = game;
-    const rootNode = new MCTSNode(this.mGame.getCurrentGameState(), "");
-    this.mRootNodeHash = rootNode.getHash();
     //console.log(`MCTS: rootNodeHash: ${this.mRootNodeHash} player: ${rootNode.getState().getPlayerId()}`);
-    this.mMctsTree.set(rootNode.getHash(), rootNode);
   }
 
   private getNode(nodeHash: string): MCTSNode
@@ -43,20 +40,29 @@ export class MCTS
     }
   }
 
-  public getBestAction(targetPlayer: string): number
+  private reset(): void
+  {
+    const rootNode = new MCTSNode(this.mGame.getCurrentGameState(), "");
+    this.mRootNodeHash = rootNode.getHash();
+    this.mMctsTree.clear();
+    this.mMctsTree.set(rootNode.getHash(), rootNode);
+    this.mTargetPlayer = rootNode.getState().getPlayerId();
+  }
+
+  public getBestAction(): GameState
   {
     //console.log(`MCTS: getBestAction`);
     //console.log(targetPlayer);
-    
-    this.mTargetPlayer = targetPlayer;
+
+    this.reset();
     this.runSearch();
     //console.log(this.mMctsTree.size);
-    
+
     const rootNode = this.getNode(this.mRootNodeHash);
 
     if (rootNode.isLeaf())
     {
-      throw "it is not has a best action for this state";
+      throw "MCTS:getBestAction: There is no action for this state";
     }
 
     ////console.log(`MCTS: rootNodeHash: ${rootNode.getHash()} childrenSize: ${rootNode.getChildrenNodes().length} player: ${rootNode.getState().getPlayerId()}`);
@@ -79,9 +85,9 @@ export class MCTS
     }
     if (!bestNode)
     {
-      throw "best node not found";
+      throw "MCTS:getBestAction: best node not found";
     }
-    return this.getMovementPosition(rootNode, bestNode); // retornar a posição que irá ocupar
+    return bestNode.getState();
   }
 
   private getMovementPosition(previousNode: MCTSNode, node: MCTSNode): number

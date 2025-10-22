@@ -22,7 +22,12 @@ export default abstract class GameController
     return this.getCurrentGameState().getPlayerId();
   }
 
-  public addPlay(boardState: string[]): void
+  public addPlayByGameState(gameState: GameState): void
+  {
+    this.mStatesHistory.push(gameState);
+  }
+
+  public addPlayByBoardSnapshot(boardSnapshot: string[]): void
   {
     throw "must implement overload method";
   }

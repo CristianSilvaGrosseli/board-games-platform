@@ -24,7 +24,7 @@ export default function Board({
 
     const newSquares = squares.slice();
     newSquares[index] = xIsNext ? "X" : "O";
-    gameController.addPlay(newSquares);
+    gameController.addPlayByBoardSnapshot(newSquares);
     onPlay(newSquares)
   };
 

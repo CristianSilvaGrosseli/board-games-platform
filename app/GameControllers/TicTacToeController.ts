@@ -16,7 +16,7 @@ export default class TicTacToeController extends GameController
     this.mStatesHistory.push(initialState);
   }
 
-  public addPlay(boardState: string[]): void
+  public addPlayByBoardSnapshot(boardSnapshot: string[]): void
   {
     const currentTurnPlayerId = this.getCurrentTurnPlayerId();
     const playerSymbol = this.getSymbolFromPlayerId(currentTurnPlayerId);
