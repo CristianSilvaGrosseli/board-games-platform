@@ -22,10 +22,8 @@ export default function Board({
       return;
     }
 
-    const newSquares = squares.slice();
-    newSquares[index] = xIsNext ? "X" : "O";
-    gameController.addPlayByBoardSnapshot(newSquares);
-    onPlay(newSquares)
+    gameController.addPlay(index);
+    onPlay(gameController.getCurrentBoardState());
   };
 
   return (

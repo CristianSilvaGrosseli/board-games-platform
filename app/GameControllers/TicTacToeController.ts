@@ -16,13 +16,14 @@ export default class TicTacToeController extends GameController
     this.mStatesHistory.push(initialState);
   }
 
-  public addPlayByBoardSnapshot(boardSnapshot: string[]): void
+  public addPlay(play: any): void
   {
-    const currentTurnPlayerId = this.getCurrentTurnPlayerId();
-    const opponentPlayerId = currentTurnPlayerId === this.mPlayers[0].getId() ? this.mPlayers[1].getId() : this.mPlayers[0].getId();
-    const opponentPlayerSymbol = this.getSymbolFromPlayerId(opponentPlayerId);
-    const newGameState = GameStateFactory.CreateTicTacToeStateInstance(boardSnapshot.slice(), opponentPlayerId, opponentPlayerSymbol, currentTurnPlayerId);
-    this.mStatesHistory.push(newGameState);
+    if (typeof play !== "number")
+    {
+      throw "TicTacToeController::addPlay: invalid argument type";
+    }
+    const newPlay = this.getCurrentGameState().getLegalPlay(play);
+    this.addPlayByGameState(newPlay);
   }
 
   private getCurrentTurnPlayerId(): string

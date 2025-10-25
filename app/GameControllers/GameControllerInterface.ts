@@ -27,7 +27,7 @@ export default abstract class GameController
     this.mStatesHistory.push(gameState);
   }
 
-  public addPlayByBoardSnapshot(boardSnapshot: string[]): void
+  public addPlay(play: any): void
   {
     throw "must implement overload method";
   }
