@@ -1,10 +1,11 @@
 "use client"
 
-import Game from "./components/tic-tac-toe/component";
+import BoardWrapper from "@/app/components/board-wrapper/component";
+import { GameNameEnum } from "./enums/GameNameEnum";
 
 export default function Home()
 {
   return (
-    <Game />
+    <BoardWrapper choosedGame={GameNameEnum.TicTacToe} />
   );
 }

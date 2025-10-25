@@ -6,14 +6,14 @@ import { MCTS } from "@/app/IA/MCTS/MCTS";
 import './styles.css'
 import Minimax from "@/app/IA/Minimax/Minimax";
 
-export default function Game()
+export default function TicTacToeUi({
+  gameController
+}:
 {
-  const gameController = useRef<GameController>(null);
-  if (!gameController.current)
-  {
-    gameController.current = GameControllerFactory.CreateTicTacToeControllerInstance();
-  }
-  const [history, setHistory] = useState([gameController.current.getCurrentBoardState()]);
+  gameController: GameController
+})
+{
+  const [history, setHistory] = useState([gameController.getCurrentBoardState()]);
   const [currentMove, setCurrentMove] = useState(0);
   const xIsNext = currentMove % 2 === 0;
 
@@ -25,18 +25,18 @@ export default function Game()
 
   useEffect(() => {
     const xIsNext = currentMove % 2 === 0;
-    if (!xIsNext && gameController.current && !gameController.current.getCurrentGameState().isTerminal())
+    if (!xIsNext && !gameController.getCurrentGameState().isTerminal())
     {
       //const ia = new MCTS(gameController.current);
-      const ia = new Minimax(gameController.current);
+      const ia = new Minimax(gameController);
       const bestAction = ia.getBestAction();
-      gameController.current.addPlayByGameState(bestAction);
+      gameController.addPlayByGameState(bestAction);
       handlePlay(bestAction.getBoardState());
     }
   }, [currentMove]);
 
   const jumpTo = (nextMove: number) => {
-    gameController.current?.setCurrentGameState(nextMove);
+    gameController.setCurrentGameState(nextMove);
     setCurrentMove(nextMove);
   };
 
@@ -61,7 +61,7 @@ export default function Game()
     <>
       <div className="game">
         <div className="game-board">
-          <Board xIsNext={xIsNext} gameController={gameController.current} onPlay={handlePlay} />
+          <Board xIsNext={xIsNext} gameController={gameController} onPlay={handlePlay} />
         </div>
       </div>
       <div className="game-info">

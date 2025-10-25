@@ -1,0 +1,4 @@
+export enum GameNameEnum
+{
+  TicTacToe,
+}
