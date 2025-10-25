@@ -3,13 +3,11 @@ import GameState from "@/app/GameControllers/GameState/GameStateInterface";
 export default class TicTacToeState extends GameState
 {
   private mSymbol = "";
-  private mOpponentPlayerId = "";
 
   constructor(boardState: string[], playerId: string, symbol: string, opponentplayerId: string)
   {
-    super(boardState, playerId)
+    super(boardState, playerId, opponentplayerId);
     this.mSymbol = symbol;
-    this.mOpponentPlayerId = opponentplayerId;
   }
 
   public getLegalPlays(): GameState[]

@@ -1,9 +1,10 @@
 export default abstract class GameState
 {
     protected mPlayerId: string = "";
+    protected mOpponentPlayerId: string = "";
     protected mBoardState: string[] = [];
 
-    constructor(boardState: string[], playerId: string)
+    constructor(boardState: string[], playerId: string, opponentPlayerId: string)
     {
         if (boardState.length === 0)
         {
@@ -11,6 +12,7 @@ export default abstract class GameState
         }
         this.mBoardState = boardState.slice();
         this.mPlayerId = playerId;
+        this.mOpponentPlayerId = opponentPlayerId;
         //console.log(`game state playerid: ${this.mPlayerId}`);
     }
 
