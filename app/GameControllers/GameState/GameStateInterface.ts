@@ -26,6 +26,11 @@ export default abstract class GameState
         return this.mBoardState.slice();
     }
 
+    public getLegalPlay(play: any): GameState
+    {
+        throw "must implement overload method";
+    }
+
     getLegalPlays(): GameState[]
     {
         throw "must implement overload method";

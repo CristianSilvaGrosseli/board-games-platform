@@ -1,4 +1,5 @@
 import GameState from "@/app/GameControllers/GameState/GameStateInterface";
+import GameStateFactory from "@/app/GameControllers/GameState/GameStateFactory";
 
 export default class TicTacToeState extends GameState
 {
@@ -10,23 +11,35 @@ export default class TicTacToeState extends GameState
     this.mSymbol = symbol;
   }
 
+  public getLegalPlay(play: any): GameState
+  {
+    if (typeof play !== "number")
+    {
+      throw "TicTacToe::getLegalPlay: invalid argument type";
+    }
+    const playIndex = Number(play);
+    const isLegalPlay = this.mBoardState[playIndex] === "";
+    if (!isLegalPlay)
+    {
+      throw "TicTacToe::getLegalPlay: ilegal move: move already played";
+    }
+    const appliedBoard = this.mBoardState.slice();
+    appliedBoard[playIndex] = this.mSymbol;
+    return GameStateFactory.CreateTicTacToeStateInstance(appliedBoard, this.mOpponentPlayerId, this.mSymbol === "X" ? "O" : "X", this.mPlayerId);
+  }
+
   public getLegalPlays(): GameState[]
   {
-    //console.log(`GameState: ${this.mBoardState.toString()}: getLegalPlays`);
     if (this.isTerminal())
     {
-      //console.log(`GameState: ${this.mBoardState.toString()}: getLegalPlays: isTerminal`);
       return [];
     }
 
     return this.mBoardState.reduce((ret: GameState[], c, i) => {
-      if (!c)
+      try
       {
-        const appliedBoard = this.mBoardState.slice();
-        appliedBoard[i] = this.mSymbol;
-        const legalState: GameState = new TicTacToeState(appliedBoard, this.mOpponentPlayerId, this.mSymbol === "X" ? "O" : "X", this.mPlayerId);
-        ret.push(legalState);
-      }
+        ret.push(this.getLegalPlay(i));
+      } catch{}
       return ret;
     }, []);
   }
