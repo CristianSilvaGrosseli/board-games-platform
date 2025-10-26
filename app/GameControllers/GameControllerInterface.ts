@@ -5,11 +5,13 @@ export default abstract class GameController
 {
   protected mStatesHistory: GameState[] = [];
   protected mPlayers: Player[] = [];
+  protected mStartingPlayerId: string = "";
 
   constructor()
   {
     this.mPlayers.push(new Player("Cristian"));
     this.mPlayers.push(new Player("Beth Harmon"));
+    this.mStartingPlayerId = this.mPlayers[0].getId();
   }
 
   public getCurrentGameState(): GameState
