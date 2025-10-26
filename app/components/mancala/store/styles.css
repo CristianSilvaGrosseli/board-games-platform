@@ -1,0 +1,11 @@
+.store
+{
+  width: 120px;
+  height: 120px;
+  border: 5px solid gray;
+  border-radius: 50px;
+  background-color: #fff;
+  font-size: 100px;
+  text-align: center;
+  color: aqua;
+}
