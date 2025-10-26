@@ -1,0 +1,27 @@
+.kalah-board
+{
+  display: flex;
+}
+
+.houses-wrapper
+{
+  display: flex;
+  flex-direction: column;
+}
+
+.side-houses-wrapper
+{
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.side-houses-wrapper.top-side
+{
+  flex-direction: row-reverse;
+}
+
+.store-wrapper
+{
+  display: flex;
+  align-items: center;
+}

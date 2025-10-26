@@ -1,6 +1,7 @@
 import { JSX, useRef } from "react";
 import { GameNameEnum } from "@/app/enums/GameNameEnum";
 import TicTacToeUi from "@/app/components/tic-tac-toe/component";
+import KalahBoard from "@/app/components/mancala/kalah-board/component";
 import GameController from "@/app/GameControllers/GameControllerInterface";
 import GameControllerFactory from "@/app/GameControllers/GameControllerFactory";
 
@@ -30,6 +31,10 @@ export default function BoardWrapper({
   if (choosedGame === GameNameEnum.TicTacToe)
   {
     boardComponent = <TicTacToeUi gameController={getGamerController(GameControllerFactory.CreateTicTacToeControllerInstance)} />
+  }
+  else if (choosedGame === GameNameEnum.Kalah)
+  {
+    boardComponent = <KalahBoard gameController={getGamerController(GameControllerFactory.CreateKalahControllerInstance)} />
   }
   else
   {
