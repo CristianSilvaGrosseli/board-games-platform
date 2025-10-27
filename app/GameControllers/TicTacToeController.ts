@@ -11,7 +11,7 @@ export default class TicTacToeController extends GameController
 
   private setInitialState(): void
   {
-    const initialBoard = Array(9).fill(null);
+    const initialBoard: string[] = Array(9).fill("");
     const initialState = GameStateFactory.CreateTicTacToeStateInstance(initialBoard, this.mPlayers[0].getId(), "X", this.mPlayers[1].getId());
     this.mStatesHistory.push(initialState);
   }
