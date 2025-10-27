@@ -1,19 +1,17 @@
+import IAInterface from "@/app/IA/IAInterface";
+import MCTSNode from "@/app/IA/MCTS/MCTSNode";
 import GameController from "@/app/GameControllers/GameControllerInterface";
 import GameState from "@/app/GameControllers/GameState/GameStateInterface";
-import MCTSNode from "@/app/IA/MCTS/MCTSNode";
 
-export class MCTS
+export class MCTS extends IAInterface
 {
-  mGame: GameController;
-  mMctsTree: Map<string, MCTSNode> = new Map();
-  mTargetPlayer: string = "";
-  mRootNodeHash: string = "";
+  private mMctsTree: Map<string, MCTSNode> = new Map();
+  private mTargetPlayer: string = "";
+  private mRootNodeHash: string = "";
 
   constructor(game: GameController)
   {
-    //console.log(`MCTS: constructor`);
-    this.mGame = game;
-    //console.log(`MCTS: rootNodeHash: ${this.mRootNodeHash} player: ${rootNode.getState().getPlayerId()}`);
+    super(game)
   }
 
   private getNode(nodeHash: string): MCTSNode

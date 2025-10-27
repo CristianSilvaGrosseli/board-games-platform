@@ -1,14 +1,14 @@
+import IAInterface from "@/app/IA/IAInterface";
 import GameController from "@/app/GameControllers/GameControllerInterface";
 import GameState from "@/app/GameControllers/GameState/GameStateInterface";
 
-export default class Minimax
+export default class Minimax extends IAInterface
 {
-  private mGame: GameController;
   private mMaximizingPlayerId: string = "";
 
   constructor(game: GameController)
   {
-    this.mGame = game;
+    super(game);
   }
 
   public getBestAction(): GameState
