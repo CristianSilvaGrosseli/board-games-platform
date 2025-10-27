@@ -7,10 +7,10 @@ export default abstract class GameController
   protected mPlayers: Player[] = [];
   protected mStartingPlayerId: string = "";
 
-  constructor()
+  constructor(player1: Player, player2: Player)
   {
-    this.mPlayers.push(new Player("Cristian"));
-    this.mPlayers.push(new Player("Beth Harmon"));
+    this.mPlayers.push(player1);
+    this.mPlayers.push(player2);
     this.mStartingPlayerId = this.mPlayers[0].getId();
   }
 
@@ -57,5 +57,29 @@ export default abstract class GameController
       return "";
     }
     return this.mPlayers[0].getId() === winnerId ? this.mPlayers[0].getName() : this.mPlayers[1].getName();
+  }
+  
+  protected getInitialPlayersArrangement():
+  {
+    startingPlayerId: string,
+    opponentPlayerId: string
+  }
+  {
+    const startingPlayer = this.mPlayers.find((player: Player) => player.isStartingPlayer());
+    if (startingPlayer === undefined)
+    {
+      throw "GameController:getInitialPlayersArrangement: starting player not defined";
+    }
+    const opponentPlayer = this.mPlayers.find((player: Player) => !player.isStartingPlayer());
+    if (opponentPlayer === undefined)
+    {
+      throw "GameController:getInitialPlayersArrangement: opponent player not defined";
+    }
+    return { startingPlayerId: startingPlayer.getId(), opponentPlayerId: opponentPlayer.getId() };
+  }
+
+  protected setInitialState(): void
+  {
+    throw "GameController:setInitialState: must implement overload method";
   }
 }

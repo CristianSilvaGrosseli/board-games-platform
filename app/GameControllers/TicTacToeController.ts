@@ -1,18 +1,20 @@
 import GameController from "@/app/GameControllers/GameControllerInterface";
 import GameStateFactory from "@/app/GameControllers/GameState/GameStateFactory";
+import Player from "@/app/Player/Player";
 
 export default class TicTacToeController extends GameController
 {
-  constructor()
+  constructor(player1: Player, player2: Player)
   {
-    super();
+    super(player1, player2);
     this.setInitialState();
   }
 
-  private setInitialState(): void
+  protected setInitialState(): void
   {
     const initialBoard: string[] = Array(9).fill("");
-    const initialState = GameStateFactory.CreateTicTacToeStateInstance(initialBoard, this.mPlayers[0].getId(), "X", this.mPlayers[1].getId());
+    const { startingPlayerId, opponentPlayerId } = this.getInitialPlayersArrangement();
+    const initialState = GameStateFactory.CreateTicTacToeStateInstance(initialBoard, startingPlayerId, "X", opponentPlayerId);
     this.mStatesHistory.push(initialState);
   }
 
@@ -24,23 +26,5 @@ export default class TicTacToeController extends GameController
     }
     const newPlay = this.getCurrentGameState().getLegalPlay(play);
     this.addPlayByGameState(newPlay);
-  }
-
-  private getCurrentTurnPlayerId(): string
-  {
-    return this.getCurrentGameState().getPlayerId();
-  }
-
-  private getSymbolFromPlayerId(playerId: string): string
-  {
-    if (this.mPlayers[0].getId() === playerId)
-    {
-      return "X";
-    }
-    if (this.mPlayers[1].getId() === playerId)
-    {
-      return "O";
-    }
-    throw "unknown player id";
   }
 }
