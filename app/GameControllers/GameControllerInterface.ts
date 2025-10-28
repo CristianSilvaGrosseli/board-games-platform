@@ -19,14 +19,15 @@ export default abstract class GameController
     return this.mStatesHistory[this.mStatesHistory.length - 1];
   }
 
-  public getCurrentTurnPlayer(): string
+  public getCurrentTurnPlayer(): Player
   {
-    return this.getCurrentGameState().getPlayerId();
-  }
-
-  public addPlayByGameState(gameState: GameState): void
-  {
-    this.mStatesHistory.push(gameState);
+    const currentTurnPlayerId = this.getCurrentGameState().getPlayerId();
+    const player = this.mPlayers.find((player: Player) => player.getId() === currentTurnPlayerId);
+    if (player === undefined)
+    {
+      throw "GameControllerInterface:getCurrentTurnPlayer: current turn player not found";
+    }
+    return player;
   }
 
   public addPlay(play: any): void
