@@ -35,6 +35,11 @@ export default abstract class GameController
     throw "must implement overload method";
   }
 
+  protected addPlayByGameState(gameState: GameState): void
+  {
+    this.mStatesHistory.push(gameState);
+  }
+
   public getCurrentBoardState(): string[]
   {
     return this.getCurrentGameState().getBoardState();
@@ -58,6 +63,11 @@ export default abstract class GameController
       return "";
     }
     return this.mPlayers[0].getId() === winnerId ? this.mPlayers[0].getName() : this.mPlayers[1].getName();
+  }
+
+  public isGameOver(): boolean
+  {
+    return this.getCurrentGameState().isTerminal();
   }
   
   protected getInitialPlayersArrangement():

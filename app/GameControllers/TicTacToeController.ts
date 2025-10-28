@@ -1,6 +1,7 @@
 import GameController from "@/app/GameControllers/GameControllerInterface";
 import GameStateFactory from "@/app/GameControllers/GameState/GameStateFactory";
 import Player from "@/app/Player/Player";
+import GameState from "@/app/GameControllers/GameState/GameStateInterface";
 
 export default class TicTacToeController extends GameController
 {
@@ -20,6 +21,15 @@ export default class TicTacToeController extends GameController
 
   public addPlay(play: any): void
   {
+    if (this.isGameOver())
+    {
+      throw "TicTacToeController:addPlay: game already finished";
+    }
+    if (play instanceof GameState)
+    {
+      this.addPlayByGameState(play);
+      return;
+    }
     if (typeof play !== "number")
     {
       throw "TicTacToeController::addPlay: invalid argument type";

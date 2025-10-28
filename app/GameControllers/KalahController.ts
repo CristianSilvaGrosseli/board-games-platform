@@ -1,5 +1,6 @@
 import GameController from "@/app/GameControllers/GameControllerInterface";
 import GameStateFactory from "./GameState/GameStateFactory";
+import GameState from "@/app/GameControllers/GameState/GameStateInterface";
 import Player from "@/app/Player/Player";
 
 export default class KalahController extends GameController
@@ -12,11 +13,20 @@ export default class KalahController extends GameController
     this.setInitialState();
   }
 
-  public addPlay(play: any)
+  public addPlay(play: any): void
   {
+    if (this.isGameOver())
+    {
+      throw "KalahController:addPlay: game already finished";
+    }
+    if (play instanceof GameState)
+    {
+      this.addPlayByGameState(play);
+      return;
+    }
     if (typeof play !== "number")
     {
-      throw "KalahController::addPlay: invalid argument type";
+      throw "KalahController:addPlay: invalid argument type";
     }
     const newPlay = this.getCurrentGameState().getLegalPlay(play);
     this.addPlayByGameState(newPlay);
