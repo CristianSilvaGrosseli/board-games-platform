@@ -126,13 +126,14 @@ export default class KalahState extends GameState
     const boardCopy = this.mBoardState.slice();
     const houseSeedsQuantity = Number(boardCopy[houseIndex]);
     boardCopy[houseIndex] = "0";
+    let nextHouseIndex = houseIndex;
     for (let i = 0; i < houseSeedsQuantity; i++)
     {
-      const nextHouseIndex = this.getNextValidIndexToSeed(houseIndex + i);
-      const isLastSeed = i === houseSeedsQuantity - 1;
+      nextHouseIndex = this.getNextValidIndexToSeed(nextHouseIndex);
+      const isLastSeed = i === (houseSeedsQuantity - 1);
       if (isLastSeed && this.isPossibleCapture(nextHouseIndex))
       {
-        const oppositeHouseIndex = boardCopy.length - houseIndex;
+        const oppositeHouseIndex = boardCopy.length - nextHouseIndex;
         const oppositeHouseSeedsQuantity = Number(boardCopy[oppositeHouseIndex]);
         boardCopy[nextHouseIndex] = String(oppositeHouseSeedsQuantity + 1);
         boardCopy[oppositeHouseIndex] = "0";
@@ -158,19 +159,20 @@ export default class KalahState extends GameState
 
   private isValidIndexToSeed(index: number): boolean
   {
-    return index !== this.mOpponentStoreIndex;
+    return index < this.mBoardState.length && index !== this.mOpponentStoreIndex;
   }
 
   private getNextValidIndexToSeed(index: number): number
   {
     let nextIndex = index + 1;
-    const isIndexOutOfBoardRange = nextIndex >= this.mBoardState.length;
-    if (isIndexOutOfBoardRange)
-    {
-      nextIndex = nextIndex - this.mBoardState.length;
-    }
     while (!this.isValidIndexToSeed(nextIndex))
     {
+      const isIndexOutOfBoardRange = nextIndex >= this.mBoardState.length;
+      if (isIndexOutOfBoardRange)
+      {
+        nextIndex = nextIndex - this.mBoardState.length;
+        continue;
+      }
       nextIndex++;
     }
     return nextIndex;
