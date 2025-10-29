@@ -89,12 +89,7 @@ export default class KalahState extends GameState
     const playerStoreSeedsQuantity = Number(this.mBoardState[this.mPlayerStoreIndex]);
     const opponentStoreSeedsQuantity = Number(this.mBoardState[this.mOpponentStoreIndex]);
 
-    const playerHouses = this.mBoardState.filter((s, i) => this.isPlayerHouseIndex(i));
-    const opponentHouses = this.mBoardState.filter((s, i) => !this.isPlayerHouseIndex(i) && i !== this.mPlayerStoreIndex && i !== this.mOpponentStoreIndex);
-
-    const isPlayerHousesWithoutSeeds = playerHouses.every(s => Number(s) === 0);
-    const isOpponentHousesWithoutSeeds = opponentHouses.every(s => Number(s) === 0);
-    if (isPlayerHousesWithoutSeeds || isOpponentHousesWithoutSeeds)
+    if (this.isPlayerHousesWithoutSeeds() || this.isOpponentHousesWithoutSeeds())
     {
       if (playerStoreSeedsQuantity > opponentStoreSeedsQuantity)
       {
@@ -135,7 +130,9 @@ export default class KalahState extends GameState
       {
         const oppositeHouseIndex = boardCopy.length - nextHouseIndex;
         const oppositeHouseSeedsQuantity = Number(boardCopy[oppositeHouseIndex]);
-        boardCopy[nextHouseIndex] = String(oppositeHouseSeedsQuantity + 1);
+        const newPlayerStoreSeedsQuantity = Number(boardCopy[this.mPlayerStoreIndex]) + oppositeHouseSeedsQuantity + 1;
+        boardCopy[this.mPlayerStoreIndex] = String(newPlayerStoreSeedsQuantity);
+        boardCopy[nextHouseIndex] = "0";
         boardCopy[oppositeHouseIndex] = "0";
       }
       else
@@ -144,12 +141,31 @@ export default class KalahState extends GameState
         boardCopy[nextHouseIndex] = String(currentHouseSeedQuantity + 1);
       }
     }
+
+    if (this.isPlayerHousesWithoutSeeds(boardCopy))
+    {
+      const totalHousesSeeds = this.getOpponentHouses(boardCopy).reduce((t: number, s) =>  t + Number(s), 0);
+      const newOpponentStoreSeedsQuantity = Number(boardCopy[this.mOpponentStoreIndex]) + totalHousesSeeds;
+      boardCopy[this.mOpponentStoreIndex] = String(newOpponentStoreSeedsQuantity);
+      boardCopy.forEach((h, i) => {if (this.isHouseIndex(i)) boardCopy[i]="0";});
+    }
+    else if (this.isOpponentHousesWithoutSeeds(boardCopy))
+    {
+      const totalHousesSeeds = this.getPlayerHouses(boardCopy).reduce((t: number, s) =>  t + Number(s), 0);
+      const newPlayerStoreSeedsQuantity = Number(boardCopy[this.mPlayerStoreIndex]) + totalHousesSeeds;
+      boardCopy[this.mPlayerStoreIndex] = String(newPlayerStoreSeedsQuantity);
+      boardCopy.forEach((h, i) => {if (this.isHouseIndex(i)) boardCopy[i]="0";});
+    }
+
     return boardCopy;
   }
 
   private isHouseIndex(index: number): boolean
   {
-    return index >= this.mPlayerSideInitialIndex && index < this.mPlayerSideInitialIndex + 6;
+    return (
+      (index >= this.mPlayerSideInitialIndex && index < this.mPlayerSideInitialIndex + 6) ||
+      (index >= this.mOpponentSideInitialIndex && index < this.mOpponentSideInitialIndex + 6)
+    );
   }
 
   private isPlayerHouseIndex(index: number): boolean
@@ -160,6 +176,28 @@ export default class KalahState extends GameState
   private isValidIndexToSeed(index: number): boolean
   {
     return index < this.mBoardState.length && index !== this.mOpponentStoreIndex;
+  }
+
+  private isPlayerHousesWithoutSeeds(boardCopy?: string[]): boolean
+  {
+    return this.getPlayerHouses(boardCopy).every(s => Number(s) === 0);
+  }
+
+  private isOpponentHousesWithoutSeeds(boardCopy?: string[]): boolean
+  {
+    return this.getOpponentHouses(boardCopy).every(s => Number(s) === 0);
+  }
+
+  private getPlayerHouses(boardCopy?: string[]): string[]
+  {
+    const board = boardCopy || this.mBoardState;
+    return board.filter((s, i) => this.isPlayerHouseIndex(i));
+  }
+
+  private getOpponentHouses(boardCopy?: string[]): string[]
+  {
+    const board = boardCopy || this.mBoardState;
+    return board.filter((s, i) => !this.isPlayerHouseIndex(i) && i !== this.mPlayerStoreIndex && i !== this.mOpponentStoreIndex);
   }
 
   private getNextValidIndexToSeed(index: number): number
@@ -180,7 +218,7 @@ export default class KalahState extends GameState
 
   private isPossibleCapture(index: number): boolean
   {
-    const isPlayerHouse = this.isHouseIndex(index);
+    const isPlayerHouse = this.isPlayerHouseIndex(index);
     const isPlayerHouseEmpty = Number(this.mBoardState[index]) === 0;
     if (isPlayerHouse && isPlayerHouseEmpty)
     {
