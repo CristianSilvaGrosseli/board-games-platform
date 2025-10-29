@@ -37,7 +37,7 @@ export default class Minimax extends IAInterface
 
   private reset(): void
   {
-    this.mMaximizingPlayerId = this.mGame.getCurrentTurnPlayer();
+    this.mMaximizingPlayerId = this.mGame.getCurrentTurnPlayer().getId();
   }
 
   private minimax(gameState: GameState): { score: number, move: GameState | null }
