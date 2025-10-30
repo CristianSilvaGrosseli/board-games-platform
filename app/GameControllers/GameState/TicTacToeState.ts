@@ -4,11 +4,13 @@ import GameStateFactory from "@/app/GameControllers/GameState/GameStateFactory";
 export default class TicTacToeState extends GameState
 {
   private mSymbol = "";
+  private mOpponentSymbol = "";
 
   constructor(boardState: string[], playerId: string, symbol: string, opponentplayerId: string)
   {
     super(boardState, playerId, opponentplayerId);
     this.mSymbol = symbol;
+    this.mOpponentSymbol = this.mSymbol === "X" ? "O" : "X";
   }
 
   public getLegalPlay(play: any): GameState
@@ -25,7 +27,7 @@ export default class TicTacToeState extends GameState
     }
     const appliedBoard = this.mBoardState.slice();
     appliedBoard[playIndex] = this.mSymbol;
-    return GameStateFactory.CreateTicTacToeStateInstance(appliedBoard, this.mOpponentPlayerId, this.mSymbol === "X" ? "O" : "X", this.mPlayerId);
+    return GameStateFactory.CreateTicTacToeStateInstance(appliedBoard, this.mOpponentPlayerId, this.mOpponentSymbol, this.mPlayerId);
   }
 
   public getLegalPlays(): GameState[]
@@ -83,5 +85,15 @@ export default class TicTacToeState extends GameState
       }
     }
     return "";
+  }
+
+  public getPlayerSymbol(): string
+  {
+    return this.mSymbol;
+  }
+
+  public getOpponentSymbol(): string
+  {
+    return this.mOpponentSymbol;
   }
 }

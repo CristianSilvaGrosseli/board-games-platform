@@ -116,6 +116,16 @@ export default class KalahState extends GameState
     return "";
   }
 
+  public getPlayerStoreSeedsQuantity(): number
+  {
+    return Number(this.mBoardState[this.mPlayerStoreIndex]);
+  }
+
+  public getOpponentStoreSeedsQuantity(): number
+  {
+    return Number(this.mBoardState[this.mOpponentStoreIndex]);
+  }
+
   private applyPlay(houseIndex: number): string[]
   {
     const boardCopy = this.mBoardState.slice();
