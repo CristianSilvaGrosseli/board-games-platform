@@ -8,6 +8,7 @@ import { PlayerTypeEnum } from "@/app/enums/PlayerTypeEnum";
 import { IANameEnum } from "@/app/enums/IANameEnum";
 import TicTacToeBoard from "@/app/components/tic-tac-toe/board/component";
 import KalahBoard from "@/app/components/mancala/kalah-board/component";
+import { HeuristicEnum } from "@/app/enums/HeuristicEnum";
 
 export default function BoardWrapper({
   choosedGame
@@ -17,9 +18,8 @@ export default function BoardWrapper({
 })
 {
   const gameControllerRef = useRef<GameController>(null);
-  const player1 = new Player(PlayerTypeEnum.Human, "Cristian", true);
+  const player1 = new Player(PlayerTypeEnum.IA, "Cristian", true);
   const player2 = new Player(PlayerTypeEnum.IA, "Beth Harmon", false);
-  const choosedIA = IANameEnum.MCTS;
 
   const getGamerController = (controllerInitializer: (arg1: Player, arg2: Player) => GameController): GameController =>
   {
@@ -74,9 +74,20 @@ export default function BoardWrapper({
         !gameController.isGameOver()
     )
     {
-      const ia = IAFactory.CreateInstance(choosedIA, gameController);
-      const bestPlay = ia.getBestAction();
-      handlePlay(bestPlay);
+      setTimeout(() => {
+        let choosedIA = IANameEnum.Minimax;
+        if (currentTurnPlayer.getId() === player1.getId())
+        {
+          choosedIA = IANameEnum.Minimax
+        }
+        if (currentTurnPlayer.getId() === player2.getId())
+        {
+          choosedIA = IANameEnum.MCTS;
+        }
+        const ia = IAFactory.CreateInstance(choosedIA, gameController);
+        const bestPlay = ia.getBestAction(HeuristicEnum.KalahState);
+        handlePlay(bestPlay);
+      }, 1000);
     }
   }, [history]);
 

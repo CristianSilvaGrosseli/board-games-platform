@@ -2,6 +2,7 @@ import IAInterface from "@/app/IA/IAInterface";
 import MCTSNode from "@/app/IA/MCTS/MCTSNode";
 import GameController from "@/app/GameControllers/GameControllerInterface";
 import GameState from "@/app/GameControllers/GameState/GameStateInterface";
+import { HeuristicEnum } from "@/app/enums/HeuristicEnum";
 
 export class MCTS extends IAInterface
 {
@@ -38,8 +39,9 @@ export class MCTS extends IAInterface
     }
   }
 
-  private reset(): void
+  private reset(heuristic?: HeuristicEnum): void
   {
+    this.mHeuristic = heuristic ? heuristic : HeuristicEnum.NoHeuristic;
     const rootNode = new MCTSNode(this.mGame.getCurrentGameState(), "");
     this.mRootNodeHash = rootNode.getHash();
     this.mMctsTree.clear();
