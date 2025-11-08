@@ -85,7 +85,7 @@ export default function BoardWrapper({
           choosedIA = IANameEnum.MCTS;
         }
         const ia = IAFactory.CreateInstance(choosedIA, gameController);
-        const bestPlay = ia.getBestAction(HeuristicEnum.KalahState);
+        const bestPlay = ia.getBestAction(HeuristicEnum.KalahHeuristic1);
         handlePlay(bestPlay);
       }, 1000);
     }

@@ -1,6 +1,6 @@
 export enum HeuristicEnum
 {
   NoHeuristic,
-  MinimaxHeuristic1,
-  KalahState
+  TicTacToeHeuristic1,
+  KalahHeuristic1
 }

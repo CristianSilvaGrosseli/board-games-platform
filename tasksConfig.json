@@ -1,0 +1,51 @@
+{
+  "models_configurations":
+  {
+    "minimax":
+    [
+      {
+        "id": "default",
+        "max_depth":
+        {
+          "enable": true,
+          "depth": 7
+        },
+        "enable_alpha_beta_prunning": true,
+        "heuristic": "noheuristic"
+      }
+    ],
+    "mcts":
+    [
+      {
+        "id": "default",
+        "max_duration_milliseconds": 1000
+      }
+    ]
+  },
+  "tasks":
+  [
+    {
+      "game": "Kalah",
+      "player1":
+      {
+        "name": "",
+        "ia_model_configuration":
+        {
+          "name": "minimax",
+          "id": "default"
+        }
+      },
+      "player2":
+      {
+        "name": "",
+        "ia_model_configuration":
+        {
+          "name": "mcts",
+          "id": "default"
+        }
+      },
+      "starting_player": "player1",
+      "task_execution_number": 1
+    }
+  ]
+}
