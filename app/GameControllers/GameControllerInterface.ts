@@ -14,6 +14,11 @@ export default abstract class GameController
     this.mStartingPlayerId = this.mPlayers[0].getId();
   }
 
+  public getTurnsTaken(): number
+  {
+    return this.mStatesHistory.length - 1;
+  }
+
   public getCurrentGameState(): GameState
   {
     return this.mStatesHistory[this.mStatesHistory.length - 1];

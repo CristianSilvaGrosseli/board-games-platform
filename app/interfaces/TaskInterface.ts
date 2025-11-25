@@ -1,7 +1,25 @@
-export default interface TasksConfigurations
+export interface TasksConfigurations
 {
   models_configurations: ModelsConfigurations
   tasks: TaskConfiguration[]
+}
+
+export interface TaskResume
+{
+  input: {
+    configuration: TaskConfiguration
+    parameters: {
+      south: MinimaxConfiguration | MCTSConfiguration
+      north: MinimaxConfiguration | MCTSConfiguration
+    }
+  },
+  result: TaskResult[]
+}
+
+export interface TaskResult {
+  executionNumber: number,
+  winner: string,
+  turnsTaken: number
 }
 
 interface ModelsConfigurations
@@ -30,7 +48,6 @@ export interface MCTSConfiguration
 
 interface TaskPlayer
 {
-  name?: string,
   ia_model_configuration:
   {
     name: string,
@@ -41,8 +58,8 @@ interface TaskPlayer
 interface TaskConfiguration
 {
   game: string,
-  player1: TaskPlayer,
-  player2: TaskPlayer,
+  southPlayer: TaskPlayer,
+  northPlayer: TaskPlayer,
   starting_player: string,
   task_execution_number: number
 }

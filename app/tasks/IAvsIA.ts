@@ -3,39 +3,41 @@ import { PlayerTypeEnum } from "@/app/enums/PlayerTypeEnum";
 import GameControllerFactory from "@/app/GameControllers/GameControllerFactory";
 import IAFactory from "@/app/IA/IAFactory";
 import Player from "@/app/Player/Player";
-import TasksConfigurations, { MCTSConfiguration, MinimaxConfiguration } from "@/app/interfaces/TaskInterface";
+import { MCTSConfiguration, MinimaxConfiguration, TasksConfigurations, TaskResume, TaskResult } from "@/app/interfaces/TaskInterface";
 import HeuristicMap from "@/app/Heuristics/HeuristicMap";
+import { Logger, ILogObj } from "tslog";
+import { appendFileSync } from "fs";
+import { GameNameEnum, GameNameEnumMap } from "../enums/GameNameEnum";
 
 export class IAvsIA
 {
   public static run(config: TasksConfigurations): void
   {
+    const log: Logger<ILogObj> = new Logger();
+    const date = new Date();
+    const logFileName = `IAvsIA_result_${date.getFullYear()}_${date.getMonth()}_${date.getDate()}_${date.getTime()}.txt`;
+    log.attachTransport((logObj) => {
+      appendFileSync(logFileName, JSON.stringify(logObj) + "\n");
+    });
+    const allTasksResume: TaskResume[] = [];
+
     config.tasks.forEach(task => {
       let executionRound: number = task.task_execution_number;
+      const taskResults: TaskResult[] = [];
       while (executionRound > 0)
       {
-        const player1_name = task.player1.name || task.player1.ia_model_configuration.name;
-        const player2_name = task.player2.name || task.player2.ia_model_configuration.name;
-        const player1 = new Player(PlayerTypeEnum.IA, player1_name, task.starting_player === "player1");
-        const player2 = new Player(PlayerTypeEnum.IA, player2_name, task.starting_player === "player2");
+        const southPlayer = new Player(PlayerTypeEnum.IA, "southPlayer", task.starting_player === "southPlayer");
+        const northPlayer = new Player(PlayerTypeEnum.IA, "northPlayer", task.starting_player === "northPlayer");
 
-        let gameController;
-        const choosedGame: string = task.game;
-        if (choosedGame.toLocaleLowerCase() === "tictactoe")
-        {
-          gameController = GameControllerFactory.CreateTicTacToeControllerInstance(player1, player2);
-        }
-        else
-        {
-          gameController = GameControllerFactory.CreateKalahControllerInstance(player1, player2);
-        }
+        const choosedGame: GameNameEnum = GameNameEnumMap.stringToEnum(task.game);
+        const gameController = GameControllerFactory.CreateInstance(choosedGame, southPlayer, northPlayer);
 
         while (!gameController.isGameOver())
         {
-          let taskPlayer = task.player1;
-          if (gameController.getCurrentTurnPlayer().getId() === player2.getId())
+          let taskPlayer = task.southPlayer;
+          if (gameController.getCurrentTurnPlayer().getId() === northPlayer.getId())
           {
-            taskPlayer = task.player2;
+            taskPlayer = task.northPlayer;
           }
 
           const iaNameEnum = IANameEnumMap.stringToEnum(taskPlayer.ia_model_configuration.name);
@@ -44,7 +46,7 @@ export class IAvsIA
           let heuristic;
           if (taskPlayer.ia_model_configuration.name === "minimax")
           {
-            const heuristic_name = this.getMinimaxConfig(config, task.player1.ia_model_configuration.id).heuristic;
+            const heuristic_name = this.getMinimaxConfig(config, task.southPlayer.ia_model_configuration.id).heuristic;
             heuristic = HeuristicMap.stringToEnum(heuristic_name);
           }
 
@@ -52,10 +54,38 @@ export class IAvsIA
           gameController.addPlay(bestPlay);
         }
         const winnerName = gameController.getWinnerName();
+        
+        taskResults.push({
+          executionNumber: task.task_execution_number - executionRound + 1,
+          winner: winnerName || "draw",
+          turnsTaken: gameController.getTurnsTaken()
+        });
+
         console.log(`winner player: ${winnerName}`);
         executionRound--;
       }
+      allTasksResume.push({
+        input: {
+          configuration: task,
+          parameters: {
+            south: IAvsIA.getIAConfig(config, task.southPlayer.ia_model_configuration.id),
+            north: IAvsIA.getIAConfig(config, task.northPlayer.ia_model_configuration.id)
+          }
+        },
+        result: taskResults
+      });
     });
+    log.info(allTasksResume);
+  }
+
+  private static getIAConfig(configs: TasksConfigurations, model_id: string): MinimaxConfiguration | MCTSConfiguration
+  {
+    const config = configs.models_configurations.minimax.find(model => model.id === model_id);
+    if (config === undefined)
+    {
+      throw "";
+    }
+    return config;
   }
 
   private static getMinimaxConfig(configs: TasksConfigurations, model_id: string): MinimaxConfiguration

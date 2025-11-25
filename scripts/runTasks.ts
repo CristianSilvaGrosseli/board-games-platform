@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { IAvsIA } from "@/app/tasks/IAvsIA";
-import TasksConfigurations from "@/app/interfaces/TaskInterface";
+import { TasksConfigurations } from "@/app/interfaces/TaskInterface";
 
 async function main()
 {
